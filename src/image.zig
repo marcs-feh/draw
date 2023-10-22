@@ -24,24 +24,23 @@ fn openOrCreateFile(path: []const u8) !fs.File {
 }
 
 fn extractRGB(comptime Int: type, v: Int) [3]u8 {
-    comptime if(!checkIntType(Int))
+    comptime if (!checkIntType(Int))
         @compileError("Integer type must be 24[RGB] or 32[RGBA] bits");
 
-    const c = if(little_endian) @byteSwap(v) else v;
+    const c = if (little_endian) @byteSwap(v) else v;
     return [3]u8{
         @intCast((c >> (8 * 0)) & 0xff),
         @intCast((c >> (8 * 1)) & 0xff),
         @intCast((c >> (8 * 2)) & 0xff),
     };
-
 }
 
 fn checkIntType(comptime T: type) bool {
     var info = @typeInfo(T);
-    return comptime switch(info){
-            .Int => |I| (I.bits == 24) or (I.bits == 32),
-            else => false,
-        };
+    return comptime switch (info) {
+        .Int => |I| (I.bits == 24) or (I.bits == 32),
+        else => false,
+    };
 }
 
 pub fn writePPM(comptime Int: type, outfile: []const u8, px_data: []const Int, width: usize, height: usize) !void {
