@@ -10,9 +10,41 @@ pub const Canvas = struct {
     height: usize,
     allocator: mem.Allocator,
 
+    fn realToCanvas(self: Canvas, p: geo.Vec2) [2]usize {
+        const rw: geo.Real = @floatFromInt(self.width - 1);
+        const rh: geo.Real = @floatFromInt(self.height - 1);
+
+        const cx = p[0] * (rw / 2);
+        const cy = p[1] * (rh / 2);
+
+        var cv_coord = geo.Vec2{
+            (rw / 2) + cx,
+            (rh / 2) - cy,
+        };
+
+        // To account for float error, explictly clamp
+        // rpos[0] = if (rpos[0] == 1) rw else if (rpos[0] == 0) 0 else rpos[0];
+        //
+        // rpos[1] = if (rpos[1] == 1) 0 else if (rpos[0] == 0) rh else rpos[1];
+
+        const cpos = [2]usize{
+            @intFromFloat(cv_coord[0]),
+            @intFromFloat(cv_coord[1]),
+        };
+        std.debug.print("({d}, {d}) -> ({d}, {d})\n", .{ p[0], p[1], cpos[0], cpos[1] });
+
+        return cpos;
+    }
+
+    pub fn drawPoint(self: *Self, p: geo.Vec2, val: Color) void {
+        const where = self.realToCanvas(p);
+        self.putPixel(where[0], where[1], val);
+    }
+
     pub fn putPixel(self: *Self, x: usize, y: usize, val: Color) void {
         const pos = x + (y * self.width);
-        if (pos >= self.data.len) return;
+        const in_bounds = (x < self.width) and (y < self.height);
+        if (!in_bounds) return;
         self.data[pos] = val;
     }
 
