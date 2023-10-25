@@ -1,5 +1,6 @@
 const std = @import("std");
 const geo = @import("geometry.zig");
+const math = std.math;
 const mem = std.mem;
 
 pub const Canvas = struct {
@@ -36,6 +37,33 @@ pub const Canvas = struct {
         return cpos;
     }
 
+    pub fn drawCircle(self: *Self, circle: geo.Circle, val: Color) void {
+        const R = circle.r * @as(geo.Real, @floatFromInt(@min(self.width, self.height)));
+
+        const cv_r: usize = @intFromFloat(R);
+
+        const co = self.realToCanvas(circle.o);
+
+        // +1 is to make sample area slightly bigger to account for
+        // innacuracy
+        const left = co[1] - (cv_r + 1);
+        const right = co[1] + (cv_r + 1);
+        const top = co[0] - (cv_r + 1);
+        const bottom = co[0] + (cv_r + 1);
+
+        std.debug.print("r: {d}, cv_r: {d}\n", .{ circle.r, cv_r });
+        for (top..bottom) |row| {
+            for (left..right) |col| {
+                // self.putPixel(row, col, ~val);
+                const d = dist(.{ row, col }, co);
+                if (d == cv_r) {
+                    self.putPixel(row, col, val);
+                }
+            }
+        }
+        // self.drawPoint(circle.o, 0);
+
+    }
     pub fn drawPoint(self: *Self, p: geo.Vec2, val: Color) void {
         const where = self.realToCanvas(p);
         self.putPixel(where[0], where[1], val);
@@ -88,4 +116,11 @@ pub fn rgba(r: u8, g: u8, b: u8, a: u8) Color {
         (gg << (8 * 2)) |
         (bb << (8 * 1)) |
         (aa << (8 * 0));
+}
+
+fn dist(pa: [2]usize, pb: [2]usize) usize {
+    const a = geo.Vec2{ @floatFromInt(pa[0]), @floatFromInt(pa[1]) };
+    const b = geo.Vec2{ @floatFromInt(pb[0]), @floatFromInt(pb[1]) };
+
+    return @intFromFloat(geo.dist(a, b));
 }

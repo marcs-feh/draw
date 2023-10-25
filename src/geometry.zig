@@ -33,7 +33,7 @@ pub const Circle = struct {
     const Self = @This();
 
     /// Origin
-    o: Vec2,
+    o: Vec2 = Vec2{ 0, 0 },
     /// Radius
     r: Real,
 };
