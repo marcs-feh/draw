@@ -6,16 +6,7 @@ pub const Vec2 = @Vector(2, Real);
 
 // TODO: Things like area, perimiter, etc.
 
-pub const Line = struct {
-    const Self = @This();
-
-    a: Vec2,
-    b: Vec2,
-
-    pub fn size(self: Self) Real {
-        return dist(self.a, self.b);
-    }
-};
+pub const Line = [2]Vec2;
 
 pub const Triangle = struct {
     const Self = @This();

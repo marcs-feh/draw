@@ -81,11 +81,11 @@ pub const Canvas = struct {
     }
 
     pub fn drawLine(self: *Self, line: geo.Line, val: Color) void {
-        const ca = self.realToCanvas(line.a);
-        const cb = self.realToCanvas(line.b);
+        const ca = self.realToCanvas(line[0]);
+        const cb = self.realToCanvas(line[1]);
 
-        std.debug.print("({d}, {d}) -> ({d}, {d})\n", .{ line.a[0], line.a[1], ca[0], ca[1] });
-        std.debug.print("({d}, {d}) -> ({d}, {d})\n", .{ line.b[0], line.b[1], cb[0], cb[1] });
+        std.debug.print("({d}, {d}) -> ({d}, {d})\n", .{ line[0][0], line[0][1], ca[0], ca[1] });
+        std.debug.print("({d}, {d}) -> ({d}, {d})\n", .{ line[1][0], line[1][1], cb[0], cb[1] });
 
         self.putLine(ca[0], ca[1], cb[0], cb[1], val);
 

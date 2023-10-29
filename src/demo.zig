@@ -4,16 +4,34 @@ const geo = @import("geometry.zig");
 const Vec2 = geo.Vec2;
 pub fn drawKeyPoints(canvas: *cv.Canvas) void {
     const c = cv.rgb(0xff, 0xff, 0xff);
-    canvas.drawPoint(Vec2{ 0, 0 }, c);
+    const cl = cv.rgb(50, 50, 50);
+    const points = [_]Vec2{
+        Vec2{ 0, 0 },
 
-    canvas.drawPoint(Vec2{ 0, 1 }, c);
-    canvas.drawPoint(Vec2{ 1, 0 }, c);
-    canvas.drawPoint(Vec2{ 1, 1 }, c);
+        Vec2{ 0, 1 },
+        Vec2{ 1, 0 },
+        Vec2{ 1, 1 },
 
-    canvas.drawPoint(Vec2{ 0, -1 }, c);
-    canvas.drawPoint(Vec2{ -1, 0 }, c);
-    canvas.drawPoint(Vec2{ -1, -1 }, c);
+        Vec2{ 0, -1 },
+        Vec2{ -1, 0 },
+        Vec2{ -1, -1 },
 
-    canvas.drawPoint(Vec2{ -1, 1 }, c);
-    canvas.drawPoint(Vec2{ 1, -1 }, c);
+        Vec2{ -1, 1 },
+        Vec2{ 1, -1 },
+    };
+
+    for (points) |p| {
+        canvas.drawLine(.{ Vec2{ 0, 0 }, p }, cl);
+    }
+
+    for (points) |p| {
+        canvas.drawPoint(p, c);
+    }
+
+    // canvas.drawLine(geo.Line{Vec2{-0.5, 1}, Vec2{-0.5, -1}}, c);
+    // canvas.drawLine(geo.Line{Vec2{0.5, 1}, Vec2{0.5, -1}}, c);
+    //
+    // canvas.drawLine(geo.Line{Vec2{1, 0.5}, Vec2{-1, 0.5}}, c);
+    // canvas.drawLine(geo.Line{Vec2{1, -0.5}, Vec2{-1, -0.5}}, c);
+
 }
