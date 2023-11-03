@@ -4,7 +4,7 @@ const debug = std.debug;
 const mem = std.mem;
 const fs = std.fs;
 
-const little_endian = builtin.target.cpu.arch.endian() == .Little;
+const little_endian = builtin.target.cpu.arch.endian() == .little;
 
 const PPMError = error{
     SizeMismatch,
